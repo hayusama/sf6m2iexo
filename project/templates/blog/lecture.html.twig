@@ -1,0 +1,46 @@
+<body>
+    
+    <h1>lecture de l'article</h1>
+
+    <div>
+        <ul>
+            <li>URL : <strong>{{url|upper|trim}}</strong></li>
+            <li>ID : <strong>{{id}}</strong></li>
+        </ul>
+    </div>
+
+    <div>
+        {{webmaster}}
+    </div>
+
+
+    <div>
+        {% if id >= 5 %}
+            <p>ID sup ou egal a 5</p>
+        {% else %}
+            <p>ID inf a 5</p>
+        {% endif %}
+    </div>
+
+    <div>
+        {{( id == 25 ) ? "oui" : "non"}}
+    </div>
+
+    <div>
+        {# SI WEBMASTER N'EST PAS VIDE J'AFFICHE LE CONTENU SINON NON INDIQUE #}
+        {{ webmaster ?? "Non indiqué"}}
+    </div>
+
+    <div>
+        {{dump(tabInfo)}}
+    </div>
+
+
+    <ul>
+        {% for key, item in tabInfo %}
+            <li>{{key}}  ==  {{item}}</li>
+        {% else %}
+            <li>Pas d'utilisateur</li>
+        {% endfor %}
+    </ul>
+</body>
