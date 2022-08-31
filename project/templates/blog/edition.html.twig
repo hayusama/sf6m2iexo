@@ -1,1 +1,27 @@
-<h1>edition de mon article</h1>
+{% extends "base.html.twig" %}
+
+{% block title %}Modifier un article | {{parent()}}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Modifier l'article {{id}}</h1>
+                <hr>
+            </div>
+        </div>
+    </div>
+    {% include "parts/form_article.html.twig" %}
+{% endblock %}
+
+{% block scripts %}
+{{parent()}}
+<script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+<script>
+ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( error => {
+            console.error( error );
+        } );
+</script>
+{% endblock %}

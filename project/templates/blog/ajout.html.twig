@@ -1,1 +1,15 @@
-<h1>ajouter</h1>
+{% extends "base.html.twig" %}
+
+{% block title %}Ajouter un article | {{parent()}}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center">Ajouter un article</h1>
+                <hr>
+            </div>
+        </div>
+    </div>
+    {% include "parts/form_article.html.twig" %}
+{% endblock %}

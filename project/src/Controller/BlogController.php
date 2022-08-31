@@ -25,20 +25,8 @@ class BlogController extends AbstractController
     }
 
     #[Route('/article/{id}/{url}', name:"article_show", requirements: ['id' => "\d+", 'url'=>'.{1,}'])]
-    public function show($id,$url, Request $request, Environment $twig):Response {
-        $globals = $twig->getGlobals();
-
-        dump($globals['webmaster']);
-        $tabInfo = [
-            "id" => 8,
-            "nom" => "Dupond",
-            "prenom" => "Xavier",
-            "age" => 60,
-            "localisation" => "disparu"
-        ];
-
-        $pays = ["france","italie","belgique","portugal","japon"];
-        return $this->render("blog/lecture.html.twig", ['id' => $id, 'url'=> $url, 'tabInfo' => $tabInfo, "pays"=>$pays]);
+    public function show($id,$url):Response {
+        return $this->render("blog/lecture.html.twig", ['id' => $id, 'url'=> $url]);
     }
 
     #[Route('/edition/{id}', name:"article_edit", requirements: ['id' => "\d+"])]

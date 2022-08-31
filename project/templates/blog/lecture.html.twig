@@ -1,67 +1,29 @@
-<body>
-    
-    <h1>lecture de l'article</h1>
-
-    <div>
-        <ul>
-            <li>URL : <strong>{{url|upper|trim}}</strong></li>
-            <li>ID : <strong>{{id}}</strong></li>
-        </ul>
-    </div>
-
-    <div>
-        {{webmaster}}
-    </div>
+{% extends "base.html.twig" %}
 
 
-    <div>
-        {% if id >= 5 %}
-            <p>ID sup ou egal a 5</p>
-        {% else %}
-            <p>ID inf a 5</p>
-        {% endif %}
-    </div>
+{% block title %}{{ url|replace({'-':' '}) }} | {{parent()}}{% endblock %}
 
-    <div>
-        {{( id == 25 ) ? "oui" : "non"}}
-    </div>
-
-    <div>
-        {# SI WEBMASTER N'EST PAS VIDE J'AFFICHE LE CONTENU SINON NON INDIQUE #}
-        {{ webmaster ?? "Non indiqué"}}
-    </div>
-
-    <div>
-        {{dump(tabInfo)}}
-    </div>
-
-
-    <ul>
-        {% for key, item in tabInfo %}
-            <li>{{key}}  ==  {{item}}</li>
-        {% else %}
-            <li>Pas d'utilisateur</li>
-        {% endfor %}
-    </ul>
-
-    <select name="pays" id="">
-        {% for key, item in pays %}
-        <option value="{{key}}">{{item}}</option>
-        {% endfor %}
-    </select>
-
-    <div> 
-        <table border=1>
-            {% for info in tabinfo %} 
-                <tr>
-                    {% if loop.index is odd %}
-                           <td style = "background-color: red">{{info}}</td>
-                    {% else %}
-                            <td>{{info}}</td>
-                    {% endif %} 
-                </tr>
-            {% endfor %}
-        </table>
-    </div>
-    
-</body>
+{% block content %}
+    <article class="container">
+        <div class="row">
+            <div class="col col-12">
+                <h2 class="text-center">{{ url|replace({'-':' '})|upper }}</h2>
+                <span class="text-center d-block">14/01/2022</span>
+                <p>
+					<img src="https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="img-fluid">
+				</p>
+                <span class="categories text-center d-block font-weight-bold text-uppercase">Catégories : php,html,css</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col col-12">
+                <p>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium, ducimus nulla. Incidunt tempore libero eligendi iusto repudiandae alias labore quo a. Vel corporis tenetur aperiam beatae fuga voluptate iste excepturi.
+                </p>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium, ducimus nulla. Incidunt tempore libero eligendi iusto repudiandae alias labore quo a. Vel corporis tenetur aperiam beatae fuga voluptate iste excepturi.
+                </p>
+            </div>
+        </div>
+    </article>
+{% endblock %}
