@@ -8,5 +8,9 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.css';
 
+import {test,saucisson} from './test';
+let result = test(3,5);
+console.log(result,saucisson);
+
 // start the Stimulus application
-import './bootstrap';
+//import './bootstrap';
