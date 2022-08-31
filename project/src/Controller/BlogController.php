@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 ;
@@ -35,7 +36,9 @@ class BlogController extends AbstractController
             "age" => 60,
             "localisation" => "disparu"
         ];
-        return $this->render("blog/lecture.html.twig", ['id' => $id, 'url'=> $url, 'tabInfo' => $tabInfo]);
+
+        $pays = ["france","italie","belgique","portugal","japon"];
+        return $this->render("blog/lecture.html.twig", ['id' => $id, 'url'=> $url, 'tabInfo' => $tabInfo, "pays"=>$pays]);
     }
 
     #[Route('/edition/{id}', name:"article_edit", requirements: ['id' => "\d+"])]
@@ -46,5 +49,15 @@ class BlogController extends AbstractController
     #[Route('/suppression/{id}', name:"article_delete", requirements: ['id' => "\d+"])]
     public function remove($id):Response {
         return new Response("<body><h1>Supprimer article {$id}</h1></body>");
+    }
+
+
+    public function menu(){
+        $listMenu = [
+            ['title'=> "Mon blog", "text"=>'Accueil', "url"=> $this->generateUrl('homepage')],
+            ['title' => "login", "text" => "Connexion", "url" => "/login"]
+        ];
+
+        return $this->render("parts/menu.html.twig", ["listMenu" => $listMenu]);
     }
 }

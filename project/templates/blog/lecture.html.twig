@@ -43,4 +43,25 @@
             <li>Pas d'utilisateur</li>
         {% endfor %}
     </ul>
+
+    <select name="pays" id="">
+        {% for key, item in pays %}
+        <option value="{{key}}">{{item}}</option>
+        {% endfor %}
+    </select>
+
+    <div> 
+        <table border=1>
+            {% for info in tabinfo %} 
+                <tr>
+                    {% if loop.index is odd %}
+                           <td style = "background-color: red">{{info}}</td>
+                    {% else %}
+                            <td>{{info}}</td>
+                    {% endif %} 
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
 </body>
