@@ -1,6 +1,12 @@
 body {
     background-color: white;
 }
+
+img#banniere{
+    padding:0!important;
+}
+
+
 /* article card */
 .article-card {
     margin-bottom: 30px;
@@ -43,6 +49,14 @@ body {
 }
 
 .article-card.image-card h2 a {
-    font-size: 2.2rem;
+    font-size: 2.1rem;
     color: #fff;
+}
+
+.blue{
+    background-color:  #2196f3;
+}
+
+.white{
+    color:white;
 }

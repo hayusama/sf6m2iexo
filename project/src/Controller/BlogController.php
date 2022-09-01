@@ -2,12 +2,13 @@
 
 namespace App\Controller;
 
+use Twig\Environment;
+use App\Service\Proverbe;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 ;
 
@@ -47,5 +48,9 @@ class BlogController extends AbstractController
         ];
 
         return $this->render("parts/menu.html.twig", ["listMenu" => $listMenu]);
+    }
+
+    public function proverbe(Proverbe $proverbe){
+        return $this->render("parts/proverbe.html.twig", ["proverbe" => $proverbe->getProverbe()]); 
     }
 }
