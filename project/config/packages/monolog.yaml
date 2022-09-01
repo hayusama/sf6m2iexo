@@ -1,5 +1,5 @@
 monolog:
-    channels: ['services','controller', 'cache']
+    channels: ['services','controller', 'cache', 'm2i']
 
 when@dev:
     monolog:
@@ -21,6 +21,12 @@ when@dev:
                 type:     stream
                 path:     '%kernel.logs_dir%/cache.log'
                 channels: [cache]
+            m2i:
+                # log all messages (since debug is the lowest level)
+                level:    debug
+                type:     stream
+                path:     '%kernel.logs_dir%/cache.log'
+                channels: [m2i]
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:

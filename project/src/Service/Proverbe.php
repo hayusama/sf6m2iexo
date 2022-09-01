@@ -7,9 +7,9 @@ class Proverbe{
 
     public $logger;
 
-    public function __construct(LoggerInterface $cacheLogger)
+    public function __construct(LoggerInterface $m2iLogger)
     {
-        $this->logger = $cacheLogger;
+        $this->logger = $m2iLogger;
     }
 
         public function getProverbe():mixed{
