@@ -1,5 +1,5 @@
 monolog:
-    channels: ['services','controller', 'cache', 'm2i']
+    channels: ['services','controller', 'cache', 'm2i','deprecation']
 
 when@dev:
     monolog:
