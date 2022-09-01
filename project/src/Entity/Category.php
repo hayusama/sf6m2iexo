@@ -2,28 +2,28 @@
 
 namespace App\Entity;
 
-use App\Repository\ImageRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ImageRepository::class)]
-class Image
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
+class Category
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $chemin = null;
-
     #[ORM\Column(length: 255)]
-    private ?string $alt = null;
+    private ?string $label = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $contenu = null;
 
     #[ORM\Column]
     private ?bool $published = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default'=>'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $dateCreation = null;
 
     public function getId(): ?int
@@ -31,26 +31,26 @@ class Image
         return $this->id;
     }
 
-    public function getChemin(): ?string
+    public function getLabel(): ?string
     {
-        return $this->chemin;
+        return $this->label;
     }
 
-    public function setChemin(string $chemin): self
+    public function setLabel(string $label): self
     {
-        $this->chemin = $chemin;
+        $this->label = $label;
 
         return $this;
     }
 
-    public function getAlt(): ?string
+    public function getContenu(): ?string
     {
-        return $this->alt;
+        return $this->contenu;
     }
 
-    public function setAlt(string $alt): self
+    public function setContenu(?string $contenu): self
     {
-        $this->alt = $alt;
+        $this->contenu = $contenu;
 
         return $this;
     }
