@@ -26,6 +26,12 @@ class Image
     #[ORM\Column(type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeInterface $dateCreation = null;
 
+
+    public function __construct()
+    {
+        $this->dateCreation = new \Datetime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -30,18 +32,18 @@ class Article
     #[ORM\Column]
     private ?bool $published = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist'])]
     private ?Image $image = null;
 
-    public function getId(): ?int
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'articles')]
+    private Collection $categories;
+
+    public function __construct()
     {
-        return $this->id;
+        $this->categories = new ArrayCollection();
     }
 
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
+    
 
     public function setTitle(string $title): self
     {
@@ -106,6 +108,40 @@ class Article
     public function setImage(?Image $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }
