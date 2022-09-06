@@ -39,28 +39,44 @@ class ArticleRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Article[] Returns an array of Article objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Article
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+
+    public function listingArticle($id):?array {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT a
+            FROM '.Article::class.' a
+            WHERE a.id > :id
+            AND a.published = true
+            ORDER BY a.lastUpdateDate ASC'
+        )->setParameter('id',$id);
+
+        return $query->getResult();
+    }
+
+    public function listingArticleQB($id, $publier = false):?array{
+        $qb = $this->createQueryBuilder('a')
+                   ->where('a.id > :id')
+                   ->setParameter('id', $id)
+                   ->orderby('a.lastUpdateDate', 'ASC');
+
+        if($publier) {
+            $qb->andWhere('a.published = :published')
+               ->setParameter('published', true);
+        }
+
+        $query = $qb->getQuery();
+        return $query->getResult();
+    }
+
+    public function listingArticleRawSql($id):mixed{
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT * FROM Article WHERE id > :id ORDER BY last_update_date ASC";
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['id' => $id]);
+
+        return $result->fetchAllAssociative();
+    }
 }

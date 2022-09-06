@@ -19,7 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class BlogController extends AbstractController
 {
     #[Route('/', name: 'homepage')]
-    public function index(): Response
+    public function index(ManagerRegistry $doctrine): Response
     {
         return $this->render("blog/index.html.twig");
     }
@@ -46,17 +46,44 @@ class BlogController extends AbstractController
 
     #[Route('/fixadd', name: 'fixadd')]
     public function fixAdd(ManagerRegistry $doctrine){
+        //RECUPERE L'ENTITY MANAGER
         $em = $doctrine->getManager();
 
-       
+       //SELECTIONNE LE REPOSITORY CATEGORY
         $categoryRP = $em->getRepository(Category::class);
-        
+
+        //LANCE LA METHODE FINDALL()
         $tabCategory = $categoryRP->findAll();
 
+        //SELECTIONNE LE REPOSITORY CATEGORY ET LANCE UNE METHODE
         $categoryP = $em->getRepository(Category::class)
                         ->findOneBy(["published" => true],["id"=>"desc"]);
         
-                        dump($categoryP);
+        dump($categoryP);
+
+        //SELECTIONNE LE REPOSITORY ARTICLE ET LANCE UNE METHODE
+        $article = $em->getRepository(Article::class)
+                      ->findOneByTitle("Comment bien programmer?");
+
+        dump($article);
+        
+        //DQL CUSTOM REQUEST
+        $tabArticles = $doctrine->getManager()
+                                ->getRepository(Article::class)
+                                ->listingArticle(1);
+
+        //QUERY BUILDER CUSTOM REQUEST
+        $tabArticlesQB = $doctrine->getManager()
+                                    ->getRepository(Article::class)
+                                    ->listingArticleQB(1, true);
+
+        //RAW SQL CUSTOM REQUEST
+        $tabArticlesraw = $doctrine->getManager()
+                                    ->getRepository(Article::class)
+                                    ->listingArticleRawSql(1);
+
+
+        dump($tabArticles, $tabArticlesQB, $tabArticlesraw);
 
         // $image = new Image();
         // $image->setChemin('https://via.placeholder.com/700x120/111111/BABABA/?text=Mon+article+de+blog')
