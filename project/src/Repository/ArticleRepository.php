@@ -40,7 +40,12 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
 
-
+    /**
+     * Undocumented function
+     *
+     * @param [type] $id
+     * @return array|null
+     */
     public function listingArticle($id):?array {
         $em = $this->getEntityManager();
 
@@ -55,21 +60,31 @@ class ArticleRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $id
+     * @param boolean $publier
+     * @return array|null
+     */
     public function listingArticleQB($id, $publier = false):?array{
         $qb = $this->createQueryBuilder('a')
                    ->where('a.id > :id')
                    ->setParameter('id', $id)
                    ->orderby('a.lastUpdateDate', 'ASC');
 
-        if($publier) {
-            $qb->andWhere('a.published = :published')
-               ->setParameter('published', true);
-        }
+       $qb = $this->condition($qb,$publier);
 
         $query = $qb->getQuery();
         return $query->getResult();
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $id
+     * @return mixed
+     */
     public function listingArticleRawSql($id):mixed{
         $conn = $this->getEntityManager()->getConnection();
 
@@ -78,5 +93,34 @@ class ArticleRepository extends ServiceEntityRepository
         $result = $stmt->executeQuery(['id' => $id]);
 
         return $result->fetchAllAssociative();
+    }
+
+
+    public function jointure($id,$publier=false):?array{
+        $qb = $this->createQueryBuilder('a')
+                   ->leftJoin('a.image', "img")
+                   ->addSelect('img')
+                   ->leftJoin('a.categories', "cat")
+                   ->addSelect('cat')
+                   ->where('a.id > :id')
+                   ->setParameter('id', $id)
+                   ->orderBy('a.lastUpdateDate', "DESC");
+
+        $qb = $this->condition($qb,$publier);
+
+        
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+
+    private function condition($qb,$publier){
+        if($publier){
+            $qb->andWhere('a.published = :published')
+                ->setParameter('published', true);
+        }
+        return $qb;
     }
 }

@@ -21,6 +21,10 @@ class BlogController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function index(ManagerRegistry $doctrine): Response
     {
+        $em = $doctrine->getManager();
+        $article = $em->getRepository(Article::class)->jointure(1, true);
+        dump($article);
+        dump($article[0]->getImage()->getAlt());
         return $this->render("blog/index.html.twig");
     }
 
