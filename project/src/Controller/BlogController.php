@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Image;
 use Twig\Environment;
+use App\Entity\Article;
+use App\Entity\Category;
 use App\Service\Proverbe;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,6 +42,41 @@ class BlogController extends AbstractController
     #[Route('/suppression/{id}', name:"article_delete", requirements: ['id' => "\d+"])]
     public function remove($id):Response {
         return new Response("<body><h1>Supprimer article {$id}</h1></body>");
+    }
+
+    #[Route('/fixadd', name: 'fixadd')]
+    public function fixAdd(ManagerRegistry $doctrine){
+        $em = $doctrine->getManager();
+
+       
+        $categoryRP = $em->getRepository(Category::class);
+        
+        $tabCategory = $categoryRP->findAll();
+
+        $categoryP = $em->getRepository(Category::class)
+                        ->findOneBy(["published" => true],["id"=>"desc"]);
+        
+                        dump($categoryP);
+
+        // $image = new Image();
+        // $image->setChemin('https://via.placeholder.com/700x120/111111/BABABA/?text=Mon+article+de+blog')
+        //       ->setAlt('Information')
+        //       ->setPublished(true);
+
+        // $article = new Article;
+        // $article->setTitle("Comment bien programmer?");
+        // $article->setImage($image);
+        // $article->addCategory($tabCategory[0]);
+        // $article->addCategory($tabCategory[1]);
+        // $article->setContent("Voici le contenu de mon premier article!");
+        // $article->setLastUpdateDate(new \Datetime());
+        // $article->setPublished(true);
+        
+        // $em->persist($article);
+        // $em->flush();
+        // dump($article);
+
+        return new Response("<body>ok</body>");
     }
 
 
