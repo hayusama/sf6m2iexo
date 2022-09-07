@@ -104,7 +104,7 @@ class BlogController extends AbstractController
     public function edit($id, ManagerRegistry $doctrine):Response {
         $em = $doctrine->getManager();
         $article = $em->getRepository(Article::class)->find($id);
-        return $this->render("blog/edition.html.twig", ['id' => $id]);
+        return $this->render("blog/edition.html.twig", ['article' => $article]);
     }
 
     #[Route('/suppression/{id}', name:"article_delete", requirements: ['id' => "\d+"])]
