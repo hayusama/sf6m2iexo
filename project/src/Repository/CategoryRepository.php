@@ -39,6 +39,12 @@ class CategoryRepository extends ServiceEntityRepository
         }
     }
 
+    public function getPublish(){
+        return $this->createQueryBuilder('c')
+                    ->where('c.published = :val')
+                    ->setParameter('val', true);
+    }
+
 //    /**
 //     * @return Category[] Returns an array of Category objects
 //     */
