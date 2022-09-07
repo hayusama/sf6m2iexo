@@ -6,6 +6,7 @@ use App\Entity\Image;
 use Twig\Environment;
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Form\ArticleType;
 use App\Service\Proverbe;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,9 @@ class BlogController extends AbstractController
 
     #[Route('/add', name:"article_add")]
     public function add():Response {
-        return $this->render("blog/ajout.html.twig");
+        $form = $this->createForm(ArticleType::class);
+        dump($form);
+        return $this->render("blog/ajout.html.twig", ['form' => $form->createView()]);
     }
 
     #[Route('/article/{id}/{url}', name:"article_show", requirements: ['id' => "\d+", 'url'=>'.{1,}'])]

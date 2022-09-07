@@ -2,6 +2,7 @@ twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
         webmaster: "contact@pixel-online.fr"
+    form_themes: ['bootstrap_5_horizontal_layout.html.twig']
 
 when@test:
     twig:
