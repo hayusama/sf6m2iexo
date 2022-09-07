@@ -20,7 +20,7 @@ class Article
     
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message:"Le titre de votre article ne peut être vide!")]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

@@ -11,6 +11,15 @@
     </div>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-info">
+                {% for flashMessage in app.flashes('info') %}
+                    {{flashMessage}}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
     <div class="row" style="height:300px;">
         <div class="col col-12 col-sm-7 col-md-9" style="color:white;">
             <div class="h-75 article-card  image-card" style="background: url('https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');">

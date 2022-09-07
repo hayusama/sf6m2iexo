@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 ;
 
@@ -38,13 +39,52 @@ class BlogController extends AbstractController
      * @return Response
      */
     #[Route('/add', name:"article_add")]
-    public function add(Request $request):Response {
+    public function add(Request $request, ManagerRegistry $doctrine):Response {
         dump($_POST);
+        //CREATION D'UN OBJET ARTICLE
         $article = new Article;
+        //CREATION DU FORMULAIRE ET ON PASSE NOTRE OBJET ARTICLE POUR POUVOIR L'HYDRATER
         $form = $this->createForm(ArticleType::class,$article);
+        //HANDLEREQUEST PERMET dE RECUPERER LES DONNEES ENVOYEES UTILE EN CAS d4ERREUR DE FORMULAIRE
         $form->handleRequest($request);
+        //VERIFICATION DE LA SOUMISSION
         if($form->isSubmitted() && $form->isValid()){
-            return new Response('<body>Le formulaire est validé</body>');
+            //SURCHAGE LAST UPDATE DATE
+            $article->setLastUpdateDate(new \DateTime());
+
+            //SI ARTICLE PUBLIE == TRUE SURCHAGE DATE PUBLICATION
+            if($article->isPublished()){
+                $article->setPublicationDate(new \DateTime());
+            }
+            
+            //GESTION IMAGE POUR EVITER DE CONSERVER LE FICHIER TEMPORAIRE NE BASE
+            if($article->getImage()->getChemin() !== null){
+                //RECUPERER LE CONTENU DU FICHIER
+                $file = $form->get('image')->get('chemin')->getData();
+                //JE GENERE UN NOM TOUJOURS ALEATOIRE POUR EVITER LES ECRASEMENT D'IMAGE
+                $filename = uniqid().".".$file->guessExtension();
+
+                try{
+                    //ON BOUGE LE FICHIER TEMPORAIRE 2 PARAMETRES DOSSIER DESTINATION, NOM DU FICHIER
+                    $file->move($this->getParameter('images_directory'), $filename);
+                } catch(FileException $e) {
+                    return new Response($e->getMessage());
+                }
+                //SURCHARGE DU CHEMIN
+                $article->getImage()->setChemin($filename);
+            }
+            //AJOUT EN BASE je recupere le manager
+            $em = $doctrine->getManager();
+            //JE PERSISTE ARTICLE POUR DONNER LA MAIN A DOCTRINE SUR MON OBJET
+            $em->persist($article);
+            //JE LANCE LA TRANSACTION
+            $em->flush();
+
+            $this->addFlash('info', 'Votre article a été ajouté en base de données!');
+
+            //REDIRECTION
+            return $this->redirectToRoute('homepage');
+            
         }
         return $this->render("blog/ajout.html.twig", ['form' => $form->createView()]);
     }
