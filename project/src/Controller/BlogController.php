@@ -29,12 +29,30 @@ class BlogController extends AbstractController
         return $this->render("blog/index.html.twig");
     }
 
+
+
+
+    /**
+     * Ajout formulaire
+     *
+     * @return Response
+     */
     #[Route('/add', name:"article_add")]
-    public function add():Response {
-        $form = $this->createForm(ArticleType::class);
-        dump($form);
+    public function add(Request $request):Response {
+        dump($_POST);
+        $article = new Article;
+        $form = $this->createForm(ArticleType::class,$article);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()){
+            return new Response('<body>Le formulaire est validé</body>');
+        }
         return $this->render("blog/ajout.html.twig", ['form' => $form->createView()]);
     }
+
+
+
+
+
 
     #[Route('/article/{id}/{url}', name:"article_show", requirements: ['id' => "\d+", 'url'=>'.{1,}'])]
     public function show($id,$url):Response {
