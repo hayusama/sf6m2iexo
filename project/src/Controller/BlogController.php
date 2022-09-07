@@ -99,8 +99,11 @@ class BlogController extends AbstractController
         return $this->render("blog/lecture.html.twig", ['id' => $id, 'url'=> $url]);
     }
 
+
     #[Route('/edition/{id}', name:"article_edit", requirements: ['id' => "\d+"])]
-    public function edit($id):Response {
+    public function edit($id, ManagerRegistry $doctrine):Response {
+        $em = $doctrine->getManager();
+        $article = $em->getRepository(Article::class)->find($id);
         return $this->render("blog/edition.html.twig", ['id' => $id]);
     }
 

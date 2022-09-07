@@ -13,10 +13,11 @@
 <div class="container">
     <div class="row">
         <div class="col">
+            {% for flashMessage in app.flashes('info') %}
             <div class="alert alert-info">
-                {% for flashMessage in app.flashes('info') %}
-                    {{flashMessage}}
-                {% endfor %}
+                {{flashMessage}}
+            </div>
+            {% endfor %}
             </div>
         </div>
     </div>
