@@ -1,27 +1,31 @@
 {% extends "base.html.twig" %}
 
 
-{% block title %}{{ url|replace({'-':' '}) }} | {{parent()}}{% endblock %}
+{% block title %}{{ article.title|replace({'-':' '}) }} | {{parent()}}{% endblock %}
 
 {% block content %}
     <article class="container">
         <div class="row">
             <div class="col col-12">
-                <h2 class="text-center">{{ url|replace({'-':' '})|upper }}</h2>
-                <span class="text-center d-block">14/01/2022</span>
-                <p>
-					<img src="https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="img-fluid">
-				</p>
-                <span class="categories text-center d-block font-weight-bold text-uppercase">Catégories : php,html,css</span>
+                <h2 class="text-center">{{ article.title|replace({'-':' '})|upper }}</h2>
+                <span class="text-center d-block">{{article.publicationDate|date("d/m/Y")}}</span>
+                {% if article.image.chemin is defined  and article.image.chemin is not null %}
+                <div class="text-center">
+					<img src="{{ asset('images/articles/' ~ article.image.chemin) }}" alt="{{article.image.alt}}" class="img-fluid" style="max-width:450px">
+				</div>
+                {% endif %}
+                <span class="categories text-center d-block font-weight-bold text-uppercase">
+                    Catégories : 
+                    {% for category in article.categories %}
+                        {{category.label}}  {{loop.last ? " " : ","}}
+                    {% endfor %}
+                </span>
             </div>
         </div>
         <div class="row">
             <div class="col col-12">
-                <p>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium, ducimus nulla. Incidunt tempore libero eligendi iusto repudiandae alias labore quo a. Vel corporis tenetur aperiam beatae fuga voluptate iste excepturi.
-                </p>
-                <p>
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laudantium, ducimus nulla. Incidunt tempore libero eligendi iusto repudiandae alias labore quo a. Vel corporis tenetur aperiam beatae fuga voluptate iste excepturi.
+                <p class="text-justify">
+                    {{article.content}}
                 </p>
             </div>
         </div>

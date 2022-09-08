@@ -33,7 +33,7 @@ class BlogController extends AbstractController
         //MAIS SINON VOUS POUVEZ FAIRE $em = $doctrine->getManager() ca marche aussi
         $articles = $doctrine->getRepository(Article::class)->findBy(
             ['published'=>true],
-            ['publicationDate' => "ASC"]
+            ['publicationDate' => "DESC"]
         );
         dump($articles);
         return $this->render("blog/index.html.twig",["articles" => $articles]);
