@@ -20,7 +20,7 @@ class Contact
     #[ORM\Column(length: 255)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255,unique:true)]
+    #[ORM\Column(length: 100,unique:true)]
     private ?string $mail = null;
 
     #[ORM\Column(length: 250)]

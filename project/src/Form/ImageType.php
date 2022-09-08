@@ -14,8 +14,9 @@ class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        //DATA_CLASS NULL EVITE LE MAPPING DE IMAGE SUR LE CHAMPS CHEMIN PAR DEFAUT DATA_CLASS = IMAGE
         $builder
-            ->add('chemin', FileType::class, ["label"=>"Votre fichier"])
+            ->add('chemin', FileType::class, ["label"=>"Votre fichier", "data_class" => null])
             ->add('alt', TextType::class)
             ->add('published', CheckboxType::class, [
                                                         'label' => "Publier l'image?",

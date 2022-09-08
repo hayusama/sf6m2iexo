@@ -2,7 +2,10 @@
     {{form_start(form)}}
     
     <h2 class="text-center">::IMAGE::</h2>
-
+    {% if article is defined and article.image.chemin is not null %}
+    <img src="{{ asset("images/articles/" ~ article.image.chemin) }}" alt="" width="500" class="rounded mx-auto d-block img-fluid">
+    {% endif %}
+    
     {{form_row(form.image.chemin)}}
     {{form_row(form.image.alt)}}
     {{form_row(form.image.published, {"label_attr" : {"class": "checkbox-switch"}})}}

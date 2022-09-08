@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 ;
 
@@ -23,11 +24,19 @@ class BlogController extends AbstractController
     #[Route('/', name: 'homepage')]
     public function index(ManagerRegistry $doctrine): Response
     {
-        $em = $doctrine->getManager();
-        $article = $em->getRepository(Article::class)->jointure(1, true);
-        dump($article);
-        dump($article[0]->getImage()->getAlt());
-        return $this->render("blog/index.html.twig");
+        // $em = $doctrine->getManager();
+        // $article = $em->getRepository(Article::class)->jointure(1, true);
+        // dump($article);
+        // dump($article[0]->getImage()->getAlt());
+
+        //PAS BESOIN DE PASSER PAR GETMANAGER CAR LES DONNEES SONT DEJA EN BASES (C'EST FACULTATIF DANS CE CAS)
+        //MAIS SINON VOUS POUVEZ FAIRE $em = $doctrine->getManager() ca marche aussi
+        $articles = $doctrine->getRepository(Article::class)->findBy(
+            ['published'=>true],
+            ['publicationDate' => "DESC"]
+        );
+        dump($articles);
+        return $this->render("blog/index.html.twig",["articles" => $articles]);
     }
 
 
@@ -40,7 +49,6 @@ class BlogController extends AbstractController
      */
     #[Route('/add', name:"article_add")]
     public function add(Request $request, ManagerRegistry $doctrine):Response {
-        dump($_POST);
         //CREATION D'UN OBJET ARTICLE
         $article = new Article;
         //CREATION DU FORMULAIRE ET ON PASSE NOTRE OBJET ARTICLE POUR POUVOIR L'HYDRATER
@@ -95,19 +103,57 @@ class BlogController extends AbstractController
 
 
     #[Route('/article/{id}/{url}', name:"article_show", requirements: ['id' => "\d+", 'url'=>'.{1,}'])]
-    public function show($id,$url):Response {
-        return $this->render("blog/lecture.html.twig", ['id' => $id, 'url'=> $url]);
+    #[ParamConverter('Article', class: Article::class)]
+    public function show(article $article):Response {
+        return $this->render("blog/lecture.html.twig", ['article'=> $article]);
     }
 
 
     #[Route('/edition/{id}', name:"article_edit", requirements: ['id' => "\d+"])]
-    public function edit($id, ManagerRegistry $doctrine):Response {
+    public function edit(Article $article, ManagerRegistry $doctrine, Request $request):Response {
+        $oldImage = $article->getImage()->getChemin();
+        $form = $this->createForm(ArticleType::class,$article);
+        // $form['image']['chemin']->setData('ok');
+        // dump($form['image']['chemin']->getData());
+        dump($article);
+        //ATTENTION APRES HANDLE REQUEST L'OBJET ARTICLE EST MODIFIE
+        $form->handleRequest($request);
+        dump($article);
+        if($form->isSubmitted() && $form->isValid()){
+            $article->setLastUpdateDate(new \DateTime());
+
+            if($article->isPublished()){
+                $article->setPublicationDate(new \DateTime());
+            }
+
+            if($article->getImage()->getChemin() !== null && $article->getImage()->getChemin() !== $oldImage){
+                $file = $form->get('image')->get('chemin')->getData();
+                $fileName = uniqid(). '.'.$file->guessExtension();
+
+                try{
+                    $file->move($this->getParameter('images_directory'),$fileName);
+                    $article->getImage()->setChemin($fileName);
+                }catch(FileException $e){
+                    return new Response($e->getMessage());
+                }
+            } else {
+                $article->getImage()->setChemin($oldImage);
+            }
+
         $em = $doctrine->getManager();
-        $article = $em->getRepository(Article::class)->find($id);
-        return $this->render("blog/edition.html.twig", ['article' => $article]);
+        //PAS DE PERSIST CAR ARTICLE VIENT DE LA BASE
+        $em->flush();
+
+        $this->addFlash('info', 'Votre article a été modifié!');
+
+        return $this->redirectToRoute('homepage');
+
+        }
+        return $this->render("blog/edition.html.twig", ['article' => $article, 'form' => $form->createView()]);
     }
 
     #[Route('/suppression/{id}', name:"article_delete", requirements: ['id' => "\d+"])]
+    #[ParamConverter('Article', class: Article::class)]
     public function remove($id):Response {
         return new Response("<body><h1>Supprimer article {$id}</h1></body>");
     }

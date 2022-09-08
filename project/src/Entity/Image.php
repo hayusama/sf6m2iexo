@@ -15,7 +15,7 @@ class Image
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\NotBlank]
     private ?string $chemin = null;
 
@@ -45,7 +45,7 @@ class Image
         return $this->chemin;
     }
 
-    public function setChemin(string $chemin): self
+    public function setChemin(?string $chemin): self
     {
         $this->chemin = $chemin;
 
