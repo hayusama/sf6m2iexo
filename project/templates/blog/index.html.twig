@@ -23,64 +23,51 @@
 </div>
 
 
-{% for article in articles %}
-    {% if loop.length >= 2 %}
-        {% if loop.index == 1 %}
-            <div class="container">
-                <div class="row" style="height:300px;">
-                    <div class="col col-12 col-sm-7 col-md-9" style="color:white;">
-                        <div class="h-75 article-card  image-card" style="background: url('https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');">
-                            <h2 class="pl-2 align-text-bottom"><a href="" style="color:white">Titre</a></h2>
-                            <span class="date pl-2 align-text-bottom">14/01/2020</span>
+    {% for article in articles %}
+        {% if loop.length >= 2 %}
+            {% if loop.index == 1 %}
+                <div class="container">
+                    <div class="row" style="height:300px;">
+                        <div class="col col-12 col-sm-7 col-md-9" style="color:white;">
+                            <div class="h-75 article-card  image-card" style="background: url({{asset('images/articles/' ~ article.image.chemin)}});">
+                                <h2 class="pl-2 align-text-bottom"><a href="{{path('article_show', {'id': article.id, 'url':article.title|replace({' ':'-'})})}}" style="color:white">{{article.title}}</a></h2>
+                                <span class="date pl-2 align-text-bottom">{{article.publicationDate|date('d/m/Y')}}</span>
+                            </div>
                         </div>
-                    </div>
-        {% elseif loop.index == 2 %}
-                    <div class="col col-12 col-sm-5 col-md-3" style="color:white">
-                        <div class="h-75 article-card  image-card" style="background: url('https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260');">
-                            <h2 class="pl-2 align-text-bottom"><a href="" style="color:white">Titre</a></h2>
-                            <span class="date pl-2 align-text-bottom">14/01/2020</span>
+            {% elseif loop.index == 2 %}
+                        <div class="col col-12 col-sm-5 col-md-3" style="color:white">
+                            <div class="h-75 article-card  image-card" style="background: url({{asset('images/articles/' ~ article.image.chemin)}});">
+                                <h2 class="pl-2 align-text-bottom"><a href="{{path('article_show', {'id': article.id, 'url':article.title|replace({' ':'-'})})}}" style="color:white">{{article.title}}</a></h2>
+                                <span class="date pl-2 align-text-bottom">{{article.publicationDate|date('d/m/Y')}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+            {% endif %}
+        {% endif %}
+
+        {# si moins de 2 articles j'ouvre le container ou si on est sur la deuxieme itération précisement et qu'il y a plus de 2 articles  #}
+        {% if (loop.index == 1 and loop.length < 2) or (loop.index == 2 and loop.length >= 2) %}
+        <div class="container">
+            <div class="row">    
+        {% endif %}
+
+        {% if ( (loop.length >= 2 and loop.index > 2 ) or loop.length < 2  ) %}
+                <div class="col col-12 col-sm-6 col-md-3">
+                    <div class="article-card">
+                        <img src="{{asset('images/articles/' ~ article.image.chemin)}}" alt="{{article.image.alt}}" class="img-fluid">
+                        <h2 class=" text-center"><a href="{{path('article_show', {'id': article.id, 'url':article.title|replace({' ':'-'})})}}">{{article.title}}</a></h2>
+                        <span class="date d-block text-center">{{article.publicationDate|date('d/m/Y')}}</span>
+                    </div>
+                </div>
+        {% endif %}
+
+
+        {% if loop.last %}
+                </div>
             </div>
         {% endif %}
-    {% endif %}
-{% endfor %}
-
-
         
-
-<div class="container">
-    <div class="row">
-        <div class="col col-12 col-sm-6 col-md-3">
-            <div class="article-card">
-                <img src="https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="img-fluid">
-                <h2><a href="">Another Title</a></h2>
-                <span class="date">14/01/2019</span>
-            </div>
-        </div>
-        <div class="col col-12 col-sm-6 col-md-3">
-            <div class="article-card">
-                <img src="https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="img-fluid">
-                <h2><a href="">Another Title</a></h2>
-                <span class="date">14/01/2019</span>
-            </div>
-        </div>
-        <div class="col col-12 col-sm-6 col-md-3">
-            <div class="article-card">
-                <img src="https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="img-fluid">
-                <h2><a href="">Another Title</a></h2>
-                <span class="date">14/01/2019</span>
-            </div>
-        </div>
-        <div class="col col-12 col-sm-6 col-md-3">
-            <div class="article-card">
-                <img src="https://images.pexels.com/photos/276452/pexels-photo-276452.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="img-fluid">
-                <h2><a href="">Another Title</a></h2>
-                <span class="date">14/01/2019</span>
-            </div>
-        </div>
-    </div>
-</div>
+    {% endfor %}
 {% endblock %}
 
