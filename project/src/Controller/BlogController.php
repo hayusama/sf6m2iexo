@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -49,6 +50,10 @@ class BlogController extends AbstractController
      */
     #[Route('/add', name:"article_add")]
     public function add(Request $request, ManagerRegistry $doctrine):Response {
+        //VERIFICATION DU ROLE
+        //AUTRE POSSIBILITE
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         //CREATION D'UN OBJET ARTICLE
         $article = new Article;
         //CREATION DU FORMULAIRE ET ON PASSE NOTRE OBJET ARTICLE POUR POUVOIR L'HYDRATER
@@ -110,6 +115,7 @@ class BlogController extends AbstractController
 
 
     #[Route('/edition/{id}', name:"article_edit", requirements: ['id' => "\d+"])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Article $article, ManagerRegistry $doctrine, Request $request):Response {
         $oldImage = $article->getImage()->getChemin();
         $form = $this->createForm(ArticleType::class,$article);
@@ -224,7 +230,9 @@ class BlogController extends AbstractController
     public function menu(){
         $listMenu = [
             ['title'=> "Mon blog", "text"=>'Accueil', "url"=> $this->generateUrl('homepage')],
-            ['title' => "login", "text" => "Connexion", "url" => "/login"]
+            ['title'=> "Connexion", "text"=>'Connexion', "url"=> $this->generateUrl('app_login'), "user"=>false],
+            ['title'=> "Création de compte", "text"=>'Création de compte', "url"=> $this->generateUrl('app_register'), "user"=>false],
+            ['title'=> "Déconnexion", "text"=>'Déconnexion', "url"=> $this->generateUrl('app_logout'), "user"=>true],
         ];
 
         return $this->render("parts/menu.html.twig", ["listMenu" => $listMenu]);

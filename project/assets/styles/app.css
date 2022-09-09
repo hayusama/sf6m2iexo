@@ -2,6 +2,10 @@ body {
     background-color: white;
 }
 
+a{
+    text-decoration: none!important;
+}
+
 img#banniere{
     padding:0!important;
 }
@@ -59,4 +63,11 @@ img#banniere{
 
 .white{
     color:white;
+}
+
+/* ADMIN INTERFACE */
+a.admin-link{
+    color:white;
+    font-weight:bold;
+    text-decoration:none;
 }
