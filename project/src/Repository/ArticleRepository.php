@@ -116,6 +116,24 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
 
+    public function jointureIndex($publier=true):?array{
+        $qb = $this->createQueryBuilder('a')
+                   ->leftJoin('a.image', "img")
+                   ->addSelect('img')
+                   ->leftJoin('a.categories', "cat")
+                   ->addSelect('cat')
+                   ->orderBy('a.lastUpdateDate', "DESC");
+
+        $qb = $this->condition($qb,$publier);
+
+        
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
+    }
+
+
     private function condition($qb,$publier){
         if($publier){
             $qb->andWhere('a.published = :published')
@@ -123,4 +141,8 @@ class ArticleRepository extends ServiceEntityRepository
         }
         return $qb;
     }
+
+
+
+    
 }

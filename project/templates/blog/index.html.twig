@@ -31,6 +31,7 @@
                         <div class="col col-12 col-sm-7 col-md-9" style="color:white;">
                             <div class="h-75 article-card  image-card" style="background: url({{asset('images/articles/' ~ article.image.chemin)}});">
                                 <h2 class="pl-2 align-text-bottom"><a href="{{path('article_show', {'id': article.id, 'url':article.title|replace({' ':'-'})})}}" style="color:white">{{article.title}}</a></h2>
+                                <span class="d-block">{% for category in article.categories %} {{category.label}}{{loop.last ? "" : ", "}} {% endfor %}</span>
                                 <span class="date pl-2 align-text-bottom">{{article.publicationDate|date('d/m/Y')}}</span>
                             </div>
                         </div>
@@ -38,6 +39,7 @@
                         <div class="col col-12 col-sm-5 col-md-3" style="color:white">
                             <div class="h-75 article-card  image-card" style="background: url({{asset('images/articles/' ~ article.image.chemin)}});">
                                 <h2 class="pl-2 align-text-bottom"><a href="{{path('article_show', {'id': article.id, 'url':article.title|replace({' ':'-'})})}}" style="color:white">{{article.title}}</a></h2>
+                                <span class="d-block">{% for category in article.categories %} {{category.label}}{{loop.last ? "" : ", "}} {% endfor %}</span>
                                 <span class="date pl-2 align-text-bottom">{{article.publicationDate|date('d/m/Y')}}</span>
                             </div>
                         </div>
@@ -57,6 +59,7 @@
                     <div class="article-card">
                         <img src="{{asset('images/articles/' ~ article.image.chemin)}}" alt="{{article.image.alt}}" class="img-fluid">
                         <h2 class=" text-center"><a href="{{path('article_show', {'id': article.id, 'url':article.title|replace({' ':'-'})})}}">{{article.title}}</a></h2>
+                        <span class="d-block text-center">{% for category in article.categories %} {{category.label}}{{loop.last ? "" : ", "}} {% endfor %}</span>
                         <span class="date d-block text-center">{{article.publicationDate|date('d/m/Y')}}</span>
                     </div>
                 </div>
